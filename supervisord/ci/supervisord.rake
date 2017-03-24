@@ -23,9 +23,7 @@ namespace :ci do
 
     task install: ['ci:common:install'] do
       use_venv = in_venv
-      install_requirements('supervisord/requirements.txt',
-                           "--cache-dir #{ENV['PIP_CACHE']}",
-                           "#{ENV['VOLATILE_DIR']}/ci.log", use_venv)
+      Rake::Task['ci:common:install'].invoke('supervisord')
       sh %(docker run -d --name #{container_name} -p #{container_port}:#{container_port} \
            -v #{supervisord_rootdir}:/supervisor datadog/docker-library:supervisord_3_3_0)
     end

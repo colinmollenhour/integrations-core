@@ -17,9 +17,7 @@ namespace :ci do
 
     task install: ['ci:common:install'] do
       use_venv = in_venv
-      install_requirements('statsd/requirements.txt',
-                           "--cache-dir #{ENV['PIP_CACHE']}",
-                           "#{ENV['VOLATILE_DIR']}/ci.log", use_venv)
+      Rake::Task['ci:common:install'].invoke('statsd')
       sh %(docker run -p 8125:8125/udp -p 8126:8126 -d --name dd-test-statsd jolexa/docker-statsd)
       sleep 5
     end

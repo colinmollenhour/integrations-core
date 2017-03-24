@@ -15,9 +15,7 @@ namespace :ci do
 
     task install: ['ci:common:install'] do
       use_venv = in_venv
-      install_requirements('sqlserver/requirements.txt',
-                           "--cache-dir #{ENV['PIP_CACHE']}",
-                           "#{ENV['VOLATILE_DIR']}/ci.log", use_venv)
+      Rake::Task['ci:common:install'].invoke('sqlserver')
 
       sh %(docker run -e 'ACCEPT_EULA=Y' -e '#{sqlserver_sa_pass}' -p #{container_port}:#{container_port} \
            --name #{container_name} -d #{container_repo}) unless Gem.win_platform?

@@ -17,9 +17,7 @@ namespace :ci do
 
     task install: ['ci:common:install'] do
       use_venv = in_venv
-      install_requirements('gearmand/requirements.txt',
-                           "--cache-dir #{ENV['PIP_CACHE']}",
-                           "#{ENV['VOLATILE_DIR']}/ci.log", use_venv)
+      Rake::Task['ci:common:install'].invoke('gearmand')
       sh %(docker run -d -p #{container_port}:4730 --name #{container_name} kendu/gearman)
     end
 

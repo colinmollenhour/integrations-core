@@ -12,19 +12,14 @@ namespace :ci do
   namespace :mongo do |flavor|
     task before_install: ['ci:common:before_install']
 
-    task install: ['ci:common:install'] do
-      use_venv = in_venv
-      install_requirements('mongo/requirements.txt',
-                           "--cache-dir #{ENV['PIP_CACHE']}",
-                           "#{ENV['VOLATILE_DIR']}/ci.log", use_venv)
+    task :install do
+      Rake::Task['ci:common:install'].invoke('mongo')
       sh %(bash mongo/ci/start-docker.sh)
     end
 
     task before_script: ['ci:common:before_script'] do
       use_venv = in_venv
-      install_requirements('mongo/requirements.txt',
-                           "--cache-dir #{ENV['PIP_CACHE']}",
-                           "#{ENV['VOLATILE_DIR']}/ci.log", use_venv)
+      Rake::Task['ci:common:install'].invoke('mongo')
     end
 
     task script: ['ci:common:script'] do

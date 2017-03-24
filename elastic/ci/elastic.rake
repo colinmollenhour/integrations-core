@@ -21,9 +21,7 @@ namespace :ci do
 
     task install: ['ci:common:install'] do
       use_venv = in_venv
-      install_requirements('elastic/requirements.txt',
-                           "--cache-dir #{ENV['PIP_CACHE']}",
-                           "#{ENV['VOLATILE_DIR']}/ci.log", use_venv)
+      Rake::Task['ci:common:install'].invoke('elastic')
       docker_cmd = 'elasticsearch -Des.node.name="batman" '
       if ['0.90.13', '1.0.3', '1.1.2', '1.2.4'].any? { |v| v == elastic_version }
         docker_image = 'datadog/docker-library:elasticsearch_' + elastic_version.split('.')[0..1].join('_')

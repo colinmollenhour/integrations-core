@@ -21,9 +21,7 @@ namespace :ci do
 
     task install: ['ci:common:install'] do
       use_venv = in_venv
-      install_requirements('nginx/requirements.txt',
-                           "--cache-dir #{ENV['PIP_CACHE']}",
-                           "#{ENV['VOLATILE_DIR']}/ci.log", use_venv)
+      Rake::Task['ci:common:install'].invoke('nginx')
       if nginx_version == '1.6.2'
         repo = 'centos/nginx-16-centos7'
         sh %(docker create -p #{container_port1}:#{container_port1} -p #{container_port2}:#{container_port2} --name #{container_name} #{repo})
